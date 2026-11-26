@@ -10,7 +10,7 @@ The repository does not distribute third-party datasets. Download them directly 
 | [GPW v4.11 population count](https://developers.google.com/earth-engine/datasets/catalog/CIESIN_GPWv411_GPW_Population_Count) | Obtain the 2010 population-count raster (not density). Revision 11 is an available candidate; the precise archived revision remains unverified. |
 | [Nunn (2008) replication ZIP](https://nathannunn.sites.olt.ubc.ca/files/2022/02/DATA-22The-Long-Term-Effects-of-Africas-Slave-Trades22-slave_trade_qje_replication_dataset.zip) | Download and extract; locate slave_trade_QJE.dta. See the [data appendix](https://scholar.harvard.edu/files/nunn/files/empirical_slavery_appendix.pdf). |
 | [Nunn and Wantchekon (2011)](https://www.aeaweb.org/articles?id=10.1257/aer.101.7.3221) | Consult the article's data and replication materials for ethnic-level exports and geographic source references; locate the original tribe-level export file if provided. See the [author's data notes](https://nathannunn.sites.olt.ubc.ca/files/2022/03/Nathan_Nunn_Read-Me.pdf). The exact source and release of the archived Murdock–Gray polygon file have not been confirmed. |
-| [Natural Earth coastlines](https://www.naturalearthdata.com/downloads/10m-physical-vectors/) | Download the coastline vector layer and unzip. The 1:10m layer is a candidate; the exact archived scale/version is unverified. |
+| [Natural Earth coastlines](https://www.naturalearthdata.com/downloads/10m-physical-vectors/) | Use Natural Earth medium scale (1:50m) coastlines, as recovered from the historical notebook; the exact archived release is unverified. |
 
 ## 2. Prepare local analysis inputs
 
@@ -44,3 +44,23 @@ With the optional panel ZIP, run `uv run --locked scons redraw-panel-figures`. F
 For the full manuscript, the published figure PNGs listed in [archive correspondence](docs/archive-correspondence.md) must also be obtained separately; the paper DOI provides the visual reference, not necessarily the original image files. Install LaTeX and latexmk, then run `uv run --locked scons manuscript`.
 
 See [replication notes](docs/replication-notes.md) for known numerical discrepancies. No third-party data are bundled. The local data directory is gitignored.
+
+## Recovered preprocessing workflow
+
+Install the additional R preprocessing packages once:
+
+```r
+install.packages(c("readr", "dplyr", "sf", "haven", "rnaturalearth", "rnaturalearthdata"))
+```
+
+Place the original Murdock_Map_2020 shapefile and sidecars, tribe_level_slave_exports_Atlantic_Indian.dta, slave_trade_QJE.dta, and the two Earth Engine CSV exports (homelands_dmsp_panel.csv and homelands_pop_2010.csv) in data/raw/. The historical coast and country joins use Natural Earth medium scale (1:50m), not 1:10m. Exact release versions remain unverified.
+
+Run from the repository root:
+
+```sh
+uv run --locked scons prepare-data
+uv run --locked scons
+uv run --locked scons redraw-panel-figures MASTER_PANEL=data/homelands_dmsp_panel_master.csv
+```
+
+The [preprocessing script](source/data/prepare_inputs.R) ports the historical geometry, exports, coast, master panel, levels, growth, country totals and per-capita cross-section routines. Original Earth Engine raster-to-CSV exports were not recovered; this is an explicit remaining dependency. The reconstructed files have not yet been numerically validated against the archived inputs.
