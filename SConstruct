@@ -114,3 +114,16 @@ if "prepare-data" in COMMAND_LINE_TARGETS:
     RSCRIPT=rscript,
 )
     Alias("prepare-data", prep)
+
+# Build geometry before uploading it to Earth Engine (manual export step).
+geometry = env.Command("data/homelands_exports.gpkg",
+    ["source/data/prepare_geometry.R","data/raw/Murdock_Map_2020.shp",
+     "data/raw/tribe_level_slave_exports_Atlantic_Indian.dta","data/raw/Murdock_Map_2020.dbf",
+     "data/raw/Murdock_Map_2020.shx","data/raw/Murdock_Map_2020.prj"],
+    '"$RSCRIPT" --vanilla "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "$TARGET"',RSCRIPT=rscript)
+Alias("prepare-geometry",geometry)
+map_redraw = env.Command(
+    ["output/figures/redrawn/"+name for name in ("figure_1.png","figure_2.png","figure_3_country.png","figure_3_homeland.png","figure_6.png")],
+    ["source/figures/spatial_figures.R",geometry,"data/homelands_dmsp_panel_master.csv","data/distance_coast_by_tribe.csv"],
+    '"$RSCRIPT" --vanilla "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "${SOURCES[3]}" "${TARGETS[0].dir}"',RSCRIPT=rscript)
+Alias("redraw-spatial-figures",map_redraw)
