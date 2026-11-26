@@ -7,7 +7,7 @@ The repository does not distribute third-party datasets. Download them directly 
 | Source | Acquisition instructions |
 | --- | --- |
 | [NOAA DMSP–OLS version 4](https://developers.google.com/earth-engine/datasets/catalog/NOAA_DMSP-OLS_NIGHTTIME_LIGHTS) | Open the collection in Earth Engine; obtain annual composites for 1992–2013. Alternatively download GeoTIFFs from the [EOG archive](https://eogdata.mines.edu/dmsp/downloadV4composites.html). |
-| [GPW v4.11 population count](https://developers.google.com/earth-engine/datasets/catalog/CIESIN_GPWv411_GPW_Population_Count) | Obtain the 2010 population-count raster (not density). Revision 11 is an available candidate; the precise archived revision remains unverified. |
+| [GPW v4.11 population count](https://developers.google.com/earth-engine/datasets/catalog/CIESIN_GPWv411_GPW_Population_Count) | Obtain the 2010 population-count raster (not density). Revision 11 is confirmed by the original Earth Engine script supplied by the author. |
 | [Nunn (2008) replication ZIP](https://nathannunn.sites.olt.ubc.ca/files/2022/02/DATA-22The-Long-Term-Effects-of-Africas-Slave-Trades22-slave_trade_qje_replication_dataset.zip) | Download and extract; locate slave_trade_QJE.dta. See the [data appendix](https://scholar.harvard.edu/files/nunn/files/empirical_slavery_appendix.pdf). |
 | [Nunn and Wantchekon (2011)](https://www.aeaweb.org/articles?id=10.1257/aer.101.7.3221) | Consult the article's data and replication materials for ethnic-level exports and geographic source references; locate the original tribe-level export file if provided. See the [author's data notes](https://nathannunn.sites.olt.ubc.ca/files/2022/03/Nathan_Nunn_Read-Me.pdf). The exact source and release of the archived Murdock–Gray polygon file have not been confirmed. |
 | [Natural Earth coastlines](https://www.naturalearthdata.com/downloads/10m-physical-vectors/) | Use Natural Earth medium scale (1:50m) coastlines, as recovered from the historical notebook; the exact archived release is unverified. |
@@ -25,10 +25,10 @@ Create a local data directory with `mkdir -p data`. The upstream downloads are n
 | levels_df.csv | Construct homeland lights/export levels; TRIBE_C, avg_loglights, logexports. |
 | homeland_lights_pc_regdata.csv | Join homeland lights, population, exports, land area and coast distance; TRIBE_CODE, country, meanlight_2000_2013, totalexports, land_area, lights_pc, log_lights_pc, log_lights_km2, log_exports, dist_coast_km, log_dist_coast. Preserve literal country label NA where applicable. |
 | ctrylights.csv | Country-level lights for 2000–2013 and land area; country, meanlight20002013, land_area. Country keys must match Nunn's file. |
-| growthdf.csv | Homeland growth sample; TRIBE_CODE, country, d_log_lights, log_exports. Exact baseline/endline construction must be recovered. |
+| growthdf.csv | Homeland growth sample; TRIBE_CODE, country, d_log_lights, log_exports. Use the earliest and latest nonmissing log lights, as recovered from the historical notebook. |
 | homelands_csv.zip | Optional: ZIP with homelands_dmsp_panel.csv and homelands_dmsp_panel_master.csv at its root. Master panel requires TRIBE_CODE, year, log_lights, ttl_xpr for Figure 4. |
 
-The original raster band, satellite-year compositing, reduction settings, geographic crosswalks, and some upstream transformations are not fully recovered. These instructions identify the sources and the required schema, not a verified raw-data-to-intermediate reconstruction recipe. Exact numerical replication requires matching the archived intermediates. For those inputs, consult the author under applicable provider terms. Optional archive-only inputs and hashes are listed in [archive correspondence](docs/archive-correspondence.md).
+The original Earth Engine scripts establish the raster band, satellite-year compositing, GPW release, reducers and 1,000 m scale. The exact historical uploaded geometry asset, geographic crosswalk and Natural Earth release still require numerical verification. Exact numerical replication requires matching the archived intermediates. For those inputs, consult the author under applicable provider terms. Optional archive-only inputs and hashes are listed in [archive correspondence](docs/archive-correspondence.md).
 
 ## 3. Run the analysis
 
@@ -63,13 +63,13 @@ uv run --locked scons
 uv run --locked scons redraw-panel-figures MASTER_PANEL=data/homelands_dmsp_panel_master.csv
 ```
 
-The [preprocessing script](source/data/prepare_inputs.R) ports the historical geometry, exports, coast, master panel, levels, growth, country totals and per-capita cross-section routines. The original Earth Engine raster-to-CSV code was not recovered; the repository now includes a clearly labeled reconstruction (see below). The reconstructed files have not yet been numerically validated against the archived inputs.
+The [preprocessing script](source/data/prepare_inputs.R) ports the historical geometry, exports, coast, master panel, levels, growth, country totals and per-capita cross-section routines. The original Earth Engine export code has now been recovered directly from the author; see the three scripts below. The reconstructed files have not yet been numerically validated against the archived inputs.
 
 ## Complete reconstructed workflow
 
 1. Download the sources above and put the Murdock shapefile sidecars and ethnic export Stata file in data/raw/.
 2. Install the R packages listed above plus ggplot2 and patchwork. Run `uv run --locked scons prepare-geometry`.
-3. Convert data/homelands_exports.gpkg to a shapefile or GeoJSON (e.g. using QGIS, preserving the TRIBE_CODE, NAME, total_exports and land_area attributes) and upload to a table asset in your own [Earth Engine project](https://code.earthengine.google.com/). Copy [earth_engine_exports.js](source/data/earth_engine_exports.js) into the Code Editor, replace the placeholder asset ID, run it, and start both CSV exports in Tasks. Download the CSVs from Drive to data/raw/. If shapefile conversion truncates attribute names, use GeoJSON or adapt the script's explicit property mapping. This is a candidate reconstruction using stable_lights, annual means and native nominal scales; exact historical export settings remain unknown.
+3. Convert data/homelands_exports.gpkg to a shapefile using QGIS or `ogr2ogr -f 'ESRI Shapefile' data/raw/homelands_exports.shp data/homelands_exports.gpkg`. Verify the attributes in the resulting file: the historical Earth Engine exports used TRIBE_C, ttl_xpr and land_ar. Shapefile field truncation alone does not guarantee those exact names; explicitly rename TRIBE_CODE, total_exports and land_area to those historical aliases before upload, preserving other fields and geometry. Upload the shapefile and sidecars to your own [Earth Engine project](https://code.earthengine.google.com/). Run [earth_engine_exports.js](source/data/earth_engine_exports.js) and [earth_engine_population.js](source/data/earth_engine_population.js) separately after replacing the asset ID. Start their CSV export tasks and download both files to data/raw/. The original panel uses the first stable_lights image in each year and a mean reducer at scale 1000; population uses GPW v4.11 2010 and a sum reducer at scale 1000. The optional [earth_engine_rasters.js](source/data/earth_engine_rasters.js) exports annual mean satellite rasters over the Africa bounding box, in EPSG:4326 at scale 1000. These rasters are not the input to the homeland panel.
 4. Put slave_trade_QJE.dta in data/raw/ and run:
 
 ```sh

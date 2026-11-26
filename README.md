@@ -27,3 +27,5 @@ The manuscript target uses archived publication figures rather than claiming to 
 ## Starting from raw provider downloads
 
 See the [complete acquisition and preparation workflow](DATA_AVAILABILITY.md). The reconstructed pipeline is not yet verified against the archived numerical outputs. To compile with newly drawn figures rather than separately obtained publication PNGs, use `uv run --locked scons manuscript FIGURES=redrawn` after completing preparation and figure redraws.
+
+The original Earth Engine scripts supplied by the author are included under `source/data/`: [homeland lights](source/data/earth_engine_exports.js), [population](source/data/earth_engine_population.js), and [optional annual rasters](source/data/earth_engine_rasters.js). See the acquisition guide for asset setup and export steps.
