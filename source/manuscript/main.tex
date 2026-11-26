@@ -1,0 +1,463 @@
+\documentclass[12pt]{article}
+%%%%%%%%%%%%%%%%% General pagackages
+\usepackage{amssymb,amsmath,amsfonts,eurosym,graphicx,
+	caption,color,setspace,sectsty,comment,footmisc,
+	pdflscape,subcaption,array, multicol,multirow,tikz, bm,
+        booktabs, rotating, titling, float, pdfpages, pdflscape}
+        \usepackage[export]{adjustbox}
+%%%%%%%%%%%%%%%%% Encoding
+\usepackage[utf8]{inputenc}
+%%%%%%%%%%%%%%%%% Margins and Spacing
+\usepackage[left=1.0in,right=1.0in,top=1in,bottom=1in]{geometry}
+\usepackage{indentfirst}
+%%%%%%%%%%%%%%%%% References
+\usepackage[sort]{natbib}
+\bibliographystyle{plainnat}
+%%%%%%%%%%%%%%%%% Links
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\urlstyle{same}
+\newcommand{\doi}[1]{\url{#1}}
+%%%%%%%%%%%%%%%%% tikz/diagrams
+\usetikzlibrary{arrows,shapes,positioning,intersections,calc}
+%%%%%%%%%%%%%%%%% table formatting
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\makeatother
+%%%%%%%%%%%%%%%%% Autoreference names
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Sub-section}
+\renewcommand{\figureautorefname}{Figure}
+\renewcommand{\tableautorefname}{Table}
+\renewcommand{\figureautorefname}{Figure}
+% equation numbering start at 1
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+%%%%%%%%%%%%%%%%% Theorem Names
+\newtheorem{prop}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{result}{Result}
+\newtheorem{assumption}{Assumption}
+\newtheorem{theorem}{Theorem}
+
+%%%%%%%%%%%%%%%%% Title Information
+\setstretch{1} 
+\newcommand{\subtitle}[1]{\posttitle{\par\end{center}\begin{center}\large#1\end{center}\vskip0.5em}}
+
+\title{Slave Trade’s Shadow: Historical Slave Exports and Nighttime Lights}
+\subtitle{University of California, Berkeley\\Honors Thesis in Economics}
+\author{Eunice Shin\thanks{I am grateful to Marco Gonzalez-Navarro for invaluable guidance and support throughout this project.}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper revisits the long-run effects of Africa's slave trades on economic development by replacing national GDP per capita with satellite-based measures of nighttime lights and by shifting the unit of analysis from countries to ethnic homelands. Building on \citet{nunn2008} and \citet{henderson2012}, I construct a panel of African ethnic homelands matched to historical slave exports, precolonial political institutions, colonial characteristics, geography, and annual luminosity from The Defense Meteorological Satellite Program Operational Linescan System, henceforth known as DMSP--OLS. In country-level replications of Nunn's specification that use average night lights per square kilometer as the outcome, historical slave exports are negatively but statistically insignificant related to modern luminosity. At the ethnic-homeland level, my preferred cross-sectional regressions relate average night lights per capita to historical slave exports and distance to the coast and show that slave-export intensity is at best a modest predictor of luminosity, while coastal proximity is strongly correlated with lights per capita. A homeland-level IV specification that instruments slave exports with country-level distance to Atlantic slave ports yields strong first-stage statistics but small and insignificant second-stage coefficients. Overall, the results point to geography, especially coastal access, as a much stronger predictor of modern luminosity levels than historical slave exports.
+\end{abstract}
+
+\doublespacing
+\textit{Keywords:} Night lights, Slave trade, Economic development\\
+\textit{JEL Codes:} N37, O11, O55
+
+\newpage
+\setstretch{1.75}
+
+\section{Introduction}
+
+Africa's slave trades are widely viewed as a major historical shock with persistent consequences for development. \citet{nunn2008} shows that African countries whose populations were more heavily exported in the Atlantic and Indian Ocean trades have significantly lower income per capita today, and he presents instrumental-variables evidence based on distance to slave ports that supports a causal interpretation. \citet{nunnwantchekon2011} further document that individuals from ethnic groups more exposed to the slave trades exhibit systematically lower trust in neighbors and political authorities, consistent with channels operating through weakened states, distorted local institutions, and persistent mistrust.
+
+This paper revisits that relationship using satellite night lights instead of GDP per capita and ethnic homelands instead of countries. Following \citet{henderson2012}, I use DMSP--OLS luminosity to measure economic activity where conventional output data are limited, and I combine these data with Nunn's ethnicity-level export measures and the Murdock--Gray ethnic map to construct a homeland-level panel. This design allows me to ask whether the legacy of the slave trades shows up within countries, across ethnic territories, and across different geographic settings. Anticipating the results, I find that the strong negative GDP effects in \citet{nunn2008} do not carry over in a robust way to luminosity levels, either at the country or homeland level.
+
+Figure~\ref{fig:exports_country_homeland} visually underscores how moving from countries to ethnic homelands brings out sharp within-country differences in slave-export intensity that the national aggregates obscure.
+
+The shift from GDP to luminosity and from countries to ethnic homelands matters for two reasons. First, night lights allow me to exploit subnational variation that is more closely aligned with historical ethnic boundaries, following the ``virtual countries'' framework of \citet{michalopoulospapaioannou2013}. Second, lights extend the analysis into periods and regions where GDP data are sparse, while making geography especially salient: in my data, distance to the coast is consistently one of the strongest predictors of luminosity. The rest of the paper proceeds as follows. \autoref{sec:lit} reviews the related literature, \autoref{sec:data} describes the data, \autoref{sec:model} sets out the econometric framework, \autoref{sec:results} presents the empirical results, and \autoref{sec:conclusion} concludes.
+
+\clearpage
+\begin{landscape}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\paperheight,height=\paperwidth, keepaspectratio, center]{output/figures/figure_1.png}
+\caption{Historical slave exports by African country (left) and ethnic homeland (right). Darker colors indicate higher total exports on a log scale. The homeland map reveals substantial within-country variation that is invisible in the country aggregation and motivates the ethnic-homeland analysis.}
+\label{fig:exports_country_homeland}
+\end{figure}
+\end{landscape}
+\clearpage
+
+\section{Literature Review}
+\label{sec:lit}
+
+\citet{nunn2008} provides the starting point for this paper. Using shipping records and slave-ethnicity data, he constructs measures of the number of slaves exported from each African country in the trans-Atlantic and Indian Ocean trades and shows that higher historical exports are associated with substantially lower income per capita today. To address concerns about endogeneity, Nunn instruments slave exports with distance to historical slave ports and finds that the negative relationship between exports and income remains strong, which he interprets as evidence that the slave trades causally undermined long-run development by weakening political structures, fostering internal conflict, and eroding trust. \citet{nunnwantchekon2011} provide micro-level support for these channels by showing that individuals whose ancestors came from more heavily exported ethnic groups report lower levels of trust in neighbors, local chiefs, and national governments.
+
+My thesis extends this line of work along two dimensions. First, I replace Nunn's national GDP outcome with satellite-based luminosity, following the lights--GDP literature discussed below, and ask whether the negative association between slave exports and development persists when development is measured using night lights. Second, I move from the country level to the ethnic-homeland level by combining Nunn's ethnicity-level export data with the Murdock--Gray ethnic map, which allows me to study within-country variation across historical ethnic territories. This brings Nunn's slave-export measures into the same spatial framework used by \citet{michalopoulospapaioannou2013} and permits a more disaggregated view of persistence.
+
+A large institutional literature complements these findings and motivates my focus on heterogeneity. \citet{acemoglu2001} show that colonies with high European settler mortality were more likely to receive extractive institutions, and that these institutional differences have persistent effects on income per capita. Within countries, \citet{dell2010} use a geographic regression discontinuity around the Peruvian Mita boundary to show that districts historically subject to forced mining labor have lower consumption and worse human capital today, while \citet{lowesmontero2017} document that violent rubber concessions in the Congo Free State left affected areas with weaker local institutions, worse socioeconomic outcomes, and different patterns of trust. By contrast, \citet{dellolken2019} show that villages incorporated into the Dutch sugar cultivation system in Java are now more industrialized, better educated, and richer than nearby counterfactuals, suggesting that some production-enhancing colonial arrangements can leave positive legacies. \citet{delllanequerubin2018} similarly exploit a historical boundary in Vietnam to show that areas with stronger historical state capacity developed more effective local governance and higher levels of collective action. Guided by this work, I treat colonial origin and precolonial political centralization as potentially important moderators of the slave-trade effect, and my empirical analysis focuses on geographic heterogeneity by coastal proximity.
+
+At the ethnic-group level, \citet{michalopoulospapaioannou2013} combine Murdock's precolonial ethnic homelands with satellite night lights to show that politically centralized ethnic groups are substantially more luminous today, even within countries and across adjacent ethnic borders. Their framework builds ``virtual countries'' from the \citet{murdock1967} \emph{Ethnographic Atlas} and its corrected and extended digital version by \citet{gray1999}, and it documents that precolonial political institutions correlate strongly with contemporary regional development. This work validates my choice of ethnic homelands as the unit of analysis and my use of luminosity as a proxy for development at that level. It also provides the ethnographic and spatial backbone for linking Murdock's ethnic homelands to modern geographic polygons, which I use to construct the ethnic-homeland panel. My contribution is to focus on historical slave-export intensity rather than precolonial centralization as the primary explanatory variable and to ask whether the negative effects of the slave trades identified by \citet{nunn2008} remain visible when one looks within countries and across ethnic territories.\footnote{Other studies emphasize historical and geographic channels that I treat as controls rather than central objects of interest. \citet{huillery2009} exploits discontinuities in French colonial investment in West Africa to show that early public investments in education, health, and infrastructure had large, persistent effects on contemporary outcomes, in part because subsequent investments were concentrated in initially favored regions. In related work, \citet{huillery2011} shows that European settlement tended to favor more prosperous precolonial areas and that these locations received more colonial investment and enjoy better outcomes today, highlighting selection into colonial investment. \citet{englebert2002} quantify the ``dismemberment'' and ``suffocation'' associated with arbitrary African borders and find that both the partition of pre-existing political units and the amalgamation of distinct groups are associated with conflict and political instability. \citet{alesina2011} construct global measures of border artificiality based on ethnic partitions and straight-line segments and show that more artificial states tend to have weaker political and economic performance. These contributions motivate controlling for colonial origin, border artificiality, and aspects of precolonial political fragmentation in my regressions, but they do not change the core focus of the paper on slave exports and development.}
+
+Geography, disease, and conflict also shape African development and are likely correlated with both historical slave exports and modern lights. \citet{gallupsachs2001} show that intensive malaria transmission is associated with substantially lower income levels and slower growth, even after controlling for policy and other diseases, implying that malaria ecology is an important determinant of long-run development. \citet{miguel2004} use rainfall variation as an instrument for economic growth to show that negative income shocks significantly increase the likelihood of civil conflict in Sub-Saharan Africa, and \citet{maystadtecker2014} find that severe droughts in Somalia reduce livestock prices, lower the opportunity cost of joining armed groups, and sharply increase local conflict incidence. In light of this work, I incorporate controls for geography, malaria ecology, and conflict exposure as data permit, but I do not treat them as additional main outcomes or mechanisms beyond what the slave-trade literature already emphasizes.
+
+My choice of outcome variable and empirical strategy builds on the literature that uses satellite night lights as a proxy for economic activity. \citet{henderson2012} develop a statistical framework in which growth in DMSP--OLS night lights is combined with official GDP growth to obtain improved estimates, especially for countries with weak national accounts, and they show that lights can be used to measure economic activity for sub- and supra-national units rather than only at the country level. Earlier remote-sensing work by \citet{elvidge1997} and related studies map city lights and documents strong correlations between illuminated areas, population, and GDP, while also emphasizing issues such as coarse spatial resolution, sensor saturation, and differences across satellites. \citet{doll2006} show that nighttime radiance correlates closely with gross regional product at multiple spatial scales and can be used to construct high-resolution maps of economic activity. More recently, \citet{bruederlehodler2018} demonstrate that nighttime lights are a useful proxy for local human-development indicators such as education and asset ownership across African regions. Together, this work supports my use of log lights, lights per capita, and lights per square kilometer as proxies for regional economic activity at the ethnic-homeland level.
+
+At the same time, the lights--GDP literature stresses limitations that I explicitly take into account. \citet{chennordhaus2011} compare luminosity and output at both country and grid levels from 1992 to 2008 and conclude that night lights add relatively little where statistical systems are strong but provide valuable information in settings with poor data, particularly for subnational density measures rather than precise short-run growth estimates. Subsequent reviews echo that luminosity is noisy at high frequencies and subject to atmospheric and sensor issues but remains particularly informative in data-poor environments such as many African regions.\citep{nightlightsrevisited} Case studies such as \citet{lee2018}, who uses night lights to study the impact of sanctions on North Korean cities, and \citet{kim2022}, who estimates county-level GRDP using lights combined with population and sectoral weights, illustrate how luminosity can capture spatially disaggregated economic shocks and regional output when conventional data are scarce or unreliable. This body of work motivates my focus on medium-run average levels of lights and on multi-year averages that smooth sensor noise, rather than on high-frequency changes.
+
+Finally, \citet{gonzaleznavarroturner2018} provide a useful template for empirical work that links light intensity, population, and urbanization dynamics in a panel setting. Their approach informs my use of lights-based measures and motivates robustness checks that exclude major cities so that my results are not driven solely by a small number of bright urban cores. 
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=\textwidth]{output/figures/figure_2.png}
+    \caption{Growth in night-time lights across ethnic homelands}
+    \label{fig:map_growth_lights}
+    \begin{minipage}{\textwidth}
+    \footnotesize\emph{Notes:} The map shows ethnic homelands shaded by quantiles of the change in log night-time lights between the earliest and latest available DMSP years, with darker colors indicating larger increases in luminosity. Growth in lights is highly heterogeneous across the continent: some coastal and inland regions experienced very rapid increases, while others saw little change or even declines. Importantly, the spatial pattern does not align mechanically with either historical slave-export intensity or simple geography alone; many high-growth homelands are located in both historically heavily exported and lightly exported areas, and both coastal and interior regions appear in each growth category. This visual evidence supports the use of regression frameworks with homeland and country controls to disentangle the contribution of the slave trades from other determinants of recent growth. It also suggests that any persistent slave-trade effect on luminosity operates against a backdrop of strong, spatially uneven post-1990 developments, so interpreting coefficients requires conditioning on geography and broader regional trends rather than reading causal relationships directly off raw maps.
+    \end{minipage}
+\end{figure}
+
+\section{Data}
+\label{sec:data}
+
+My empirical analysis combines historical data on Africa's slave trades and precolonial ethnic homelands with modern satellite measures of nighttime lights and auxiliary information on geography, colonial history, health, and conflict. The core unit of observation in the main analysis is the ethnic homeland as defined in George Peter Murdock's \emph{Ethnographic Atlas} and associated maps, using the updated digital version by \citet{gray1999} and the coding of precolonial ethnic institutions by \citet{michalopoulospapaioannou2013}. Each homeland is assigned a unique ethnic identifier that I harmonize across historical and modern datasets and, where necessary, dissolve into a single polygon so that there is one geometry per group. I then intersect these polygons with modern country boundaries to assign each homeland to a country, which allows me to include country fixed effects and to merge in country-level variables such as colonial origin and distance-based instruments from \citet{nunn2008}.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary statistics: ethnic homelands}
+\label{tab:homeland_summary}
+\begin{tabular}{lrrrrrr}
+\toprule
+Variable & Mean & Median & Std.\ dev. & Min & Max & $N$ \\
+\midrule
+Homeland slave exports & \Result{THomeland.slave_exports.mean}{,.3f} & \Result{THomeland.slave_exports.median}{,.3f} & \Result{THomeland.slave_exports.sd}{,.3f} & \Result{THomeland.slave_exports.min}{,.3f} & \Result{THomeland.slave_exports.max}{,.3f} & \Result{THomeland.slave_exports.n}{,.0f} \\
+Avg.\ lights, 2000--2013 & \Result{THomeland.average_lights.mean}{,.3f} & \Result{THomeland.average_lights.median}{,.3f} & \Result{THomeland.average_lights.sd}{,.3f} & \Result{THomeland.average_lights.min}{,.3f} & \Result{THomeland.average_lights.max}{,.3f} & \Result{THomeland.average_lights.n}{,.0f} \\
+Log average lights & \Result{THomeland.log_average_lights.mean}{,.3f} & \Result{THomeland.log_average_lights.median}{,.3f} & \Result{THomeland.log_average_lights.sd}{,.3f} & \Result{THomeland.log_average_lights.min}{,.3f} & \Result{THomeland.log_average_lights.max}{,.3f} & \Result{THomeland.log_average_lights.n}{,.0f} \\
+Avg.\ lights per capita & 0.003 & 0.001 & 0.012 & 0.000 & 0.154 & 836 \\
+Log avg.\ lights per km$^2$ & \Result{THomeland.log_lights_per_square_km.mean}{,.3f} & \Result{THomeland.log_lights_per_square_km.median}{,.3f} & \Result{THomeland.log_lights_per_square_km.sd}{,.3f} & \Result{THomeland.log_lights_per_square_km.min}{,.3f} & \Result{THomeland.log_lights_per_square_km.max}{,.3f} & \Result{THomeland.log_lights_per_square_km.n}{,.0f} \\
+Distance to coast (km) & \Result{THomeland.distance_to_coast.mean}{,.3f} & \Result{THomeland.distance_to_coast.median}{,.3f} & \Result{THomeland.distance_to_coast.sd}{,.3f} & \Result{THomeland.distance_to_coast.min}{,.3f} & \Result{THomeland.distance_to_coast.max}{,.3f} & \Result{THomeland.distance_to_coast.n}{,.0f} \\
+Log distance to coast & \Result{THomeland.log_distance_to_coast.mean}{,.3f} & \Result{THomeland.log_distance_to_coast.median}{,.3f} & \Result{THomeland.log_distance_to_coast.sd}{,.3f} & \Result{THomeland.log_distance_to_coast.min}{,.3f} & \Result{THomeland.log_distance_to_coast.max}{,.3f} & \Result{THomeland.log_distance_to_coast.n}{,.0f} \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize Notes: Unit of analysis is the ethnic homeland. Total slave exports are matched from Nunn's (2008) dataset. Average lights represent the mean DMSP-OLS night-time light intensity (Digital Numbers) across the homeland polygon, averaged annually between 2000 and 2013. Lights per capita are calculated by dividing the 2000--2013 mean luminosity by 2010 population estimates. Distance to coast is the great-circle distance (in km) from the homeland centroid to the nearest African coastline.}
+\end{table}
+
+
+Historical slave exports come from \citet{nunn2008}, who construct ethnicity-level estimates of the number of slaves exported in the trans-Atlantic and Indian Ocean slave trades using shipping records and data on slave ethnicities. I use his tribe-level file, which reports counts by trade route and century, and aggregate across time and routes to obtain a measure of total slaves exported per ethnic group; I follow Nunn's codebook for any normalizations where needed but do not introduce new transformations beyond those used in the original work. When working at the ethnic-homeland level, I assign Nunn's ethnicity-level export measures to homelands using the Murdock--Nunn correspondence and the Murdock--Gray polygons and then aggregate exports to the homeland level where polygons overlap. The resulting variable, denoted $\text{SlaveExports}_i$, is time-invariant and enters all cross-sectional specifications as the main regressor of interest.
+
+
+\begin{table}[htbp]
+\centering
+\caption{Country-level descriptive statistics: GDP, lights, and slave exports}
+\label{tab:country_descriptives}
+\begin{tabular}{lcc}
+\toprule
+Variable & Mean & Std.\ dev. \\
+\midrule
+Log GDP per capita, 2000 & \Result{TCountry.log_gdp.mean}{.3f} & \Result{TCountry.log_gdp.sd}{.3f} \\
+Log lights per km$^2$, 2000--2013 & \Result{TCountry.log_lights.mean}{.3f} & \Result{TCountry.log_lights.sd}{.3f} \\
+Log slave exports per land area & \Result{TCountry.log_exports.mean}{.3f} & \Result{TCountry.log_exports.sd}{.3f} \\
+Log distance to Atlantic slave port & \Result{TCountry.log_ports.mean}{.3f} & \Result{TCountry.log_ports.sd}{.3f} \\
+\midrule
+Observations & \multicolumn{2}{c}{\Result{TCountry.n}{.0f}} \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize Notes: GDP per capita and slave exports per land area are taken from Nunn's (2008) country dataset. Log lights per km$^2$ are constructed from mean DMSP night lights between 2000 and 2013 divided by land area. Log distance to the nearest Atlantic slave port is defined as $\log(1+\text{distance in km})$.}
+\end{table}
+
+At the country level, I rely on Nunn's ``slave\_trade\_QJE'' dataset, which includes log slave exports per land area, log GDP per capita, distance to the nearest Atlantic slave port, and an extensive set of geographic, colonial, legal-origin, and regional controls \citep{nunn2008}. To bring lights into this framework, I aggregate the ethnic-homeland panel described below to the country level, compute average night-time lights between 2000 and 2013, divide by land area, and take logs to obtain $\log(\text{LightsPerKm}^2_c)$.
+
+
+The country-level descriptive statistics in \autoref{tab:country_descriptives} show substantial dispersion in both log GDP per capita and log lights per square kilometer, suggesting that luminosity can serve as a noisy but informative proxy for development in this African sample. At the ethnic-homeland level, \autoref{tab:homeland_summary} highlights the strong right skew in slave-export intensity: most homelands experienced low or zero exports, while a minority were heavily exposed, generating the within-country variation exploited in the micro-level regressions.
+
+\clearpage
+\begin{figure}[p]
+\centering
+\vspace*{\fill}
+\begin{minipage}[t]{1\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=0.88\textheight,keepaspectratio]{output/figures/figure_3_country.png}
+\end{minipage}\hfill
+\begin{minipage}[t]{1\textwidth}
+\centering
+\includegraphics[width=\linewidth,height=0.88\textheight,keepaspectratio]{output/figures/figure_3_homeland.png}
+\end{minipage}
+\caption{Country-level lights per capita (2000--2013 average) and historical African slave departure ports, alongside average night lights per capita across African ethnic homelands. Darker shading indicates higher lights per capita, and the port map highlights the coastal concentration of modern economic activity. The homeland map shows that the brightest areas are concentrated along the Mediterranean coast, the Gulf of Guinea, and the southern African seaboard, underscoring the importance of coastal access in the analysis.}
+\label{fig:country_homeland_lights}
+\vspace*{\fill}
+\end{figure}
+\clearpage
+
+Figure 3 adds the locations of historical African slave departure ports to the country-level lights-per-capita map, making clear that the main clusters of modern luminosity coincide with coastal access and historical port locations rather than with the intensity of slave exports per se.
+
+To measure contemporary economic activity at the homeland level, I use annual satellite observations of nighttime lights. For 1992--2013, I rely on the DMSP--OLS series used by \citet{henderson2012} and related remote-sensing work \citep{elvidge1997,doll2006}. I obtain annual rasters from publicly available sources, clip them to Africa, and compute the mean night light intensity within each ethnic homeland polygon for each year. This procedure yields a panel of ethnic homelands by year with variables $\text{Lights}_{it}$ (mean lights) and $\log\bigl(1+\text{Lights}_{it}\bigr)$, which I denote by $\log(\text{Lights}_{it})$ for brevity. For the cross-sectional levels specifications that are the focus of the paper, I treat average luminosity per capita over 2000--2013 as the main dependent variable and use average lights and lights per square kilometer as robustness outcomes rather than primary objects of interest. I also construct long-differences in log lights for some robustness checks, but these growth measures are not the main object of interest and are not used in the core specifications.
+
+I augment these core variables with measures of geography, precolonial institutions, and colonial history drawn from \citet{nunn2008} and related sources. At the country level, I use Nunn's distance-to-port measures, colonial origin and legal-origin dummies, and a country-level index of precolonial state development, which I merge to the ethnic-homeland panel via the country in which each homeland is located. At the homeland level, I construct and merge additional controls from the Murdock--Gray data---such as land area---and from the slave-trade datasets. In the main levels specifications, these time-invariant homeland characteristics are either absorbed by country fixed effects or included explicitly in robustness checks.
+
+Finally, I have begun to assemble additional controls for health and conflict, such as malaria ecology and historical conflict exposure, drawing on \citet{gallupsachs2001}, \citet{miguel2004}, and \citet{maystadtecker2014}. These variables are not yet included in the core regressions reported below; they are reserved for planned robustness checks as the data cleaning and matching are completed.
+
+\section{Econometric Models}
+\label{sec:model}
+
+\subsection*{Country-level specification}
+
+To compare directly with \citet{nunn2008}, I first estimate a country-level model that replaces GDP per capita with average night-time lights per square kilometer. Let $c$ index countries and let $\log\bigl(\text{LightsPerKm}^2_c\bigr)$ denote the log of average night-time lights per square kilometer over 2000--2013 in country $c$. In place of Nunn's outcome $\log\bigl(\text{GDPpc}_c\bigr)$, I estimate regressions of the form
+\begin{equation}
+\log\!\left(\text{LightsPerKm}^2_c\right)
+=
+\beta_{\text{C}} \,\text{SlaveExports}_c
++
+X_c'\gamma_{\text{C}}
++
+\varepsilon_c,
+\label{eq:country-lights}
+\end{equation}
+where $\text{SlaveExports}_c$ is Nunn's log slave exports per land area, $X_c$ is the same vector of geographic, colonial, legal-origin, and regional controls used in his baseline specification, and $\varepsilon_c$ is an error term.\citep{nunn2008} I also estimate a corresponding instrumental-variables specification in which log slave exports per area is instrumented with log distance to the nearest Atlantic slave-trade port.
+
+\subsection*{Ethnic-homeland levels specification}
+
+The core of the homeland analysis is cross-sectional and levels-based. Let $i$ index ethnic homelands and let $Y_i$ denote the 2000--2013 average of night lights per capita, which is the main outcome of interest; I also consider average lights and log lights per square kilometer as robustness measures. Let $\log\bigl(1+\text{SlaveExports}_i\bigr)$ be the log of one plus total slaves exported from homeland $i$, and let $\log\bigl(1+\text{DistCoast}_i\bigr)$ denote log distance from the homeland centroid to the African coastline. I estimate cross-sectional regressions of the form
+\begin{equation}
+Y_i
+=
+\beta_{\text{H}} \log\!\left(1+\text{SlaveExports}_i\right)
++
+\phi_{\text{H}} \log\!\left(1+\text{DistCoast}_i\right)
++
+\varepsilon_i,
+\label{eq:homeland-levels}
+\end{equation}
+where $\beta_{\text{H}}$ summarizes the partial association between historical slave exports and modern luminosity per capita and $\phi_{\text{H}}$ captures the gradient with respect to coastal proximity. I estimate \eqref{eq:homeland-levels} without country fixed effects so that both cross- and within-country variation in exports and luminosity contribute to identification; in robustness checks with country fixed effects (not reported), the coefficients on slave exports are similarly small or weaker in magnitude.
+
+\subsection*{Heterogeneity by coastal proximity}
+
+I also examine whether the levels-on-levels relationship between luminosity and slave exports differs for coastal and interior homelands. Let $\text{Coastal}_i$ be an indicator equal to one if the homeland centroid lies within 100 km of the African coastline and zero otherwise. For each outcome $Y_i$ in \eqref{eq:homeland-levels}, I estimate the interaction specification
+\begin{equation}
+\begin{aligned}
+Y_i
+&=
+\beta_{0} \log\!\left(1+\text{SlaveExports}_i\right)
++ \delta \bigl[\log\!\left(1+\text{SlaveExports}_i\right)\times \text{Coastal}_i\bigr] \\
+&\quad
++ \gamma\,\text{Coastal}_i
++ \phi_{\text{H}} \log\!\left(1+\text{DistCoast}_i\right)
++ \mu_{c(i)} + \varepsilon_i,
+\end{aligned}
+\label{eq:homeland-coast-het-levels}
+\end{equation}
+where $\delta$ captures whether the export elasticity of luminosity differs between coastal and interior homelands. In the applications reported in \autoref{tab:growth_heterogeneity_coast} and \autoref{tab:homeland_lights_pc}, the interaction term is small in magnitude and, while sometimes statistically significant, does not overturn the central finding that coastal proximity itself is a much stronger predictor of luminosity levels than slave-export intensity.
+
+\subsection*{Homeland instrumental-variables specification}
+
+As a robustness check for the levels-on-levels results, I estimate an instrumental-variables specification at the homeland level. I regress log average lights on log total slave exports and instrument $\log\bigl(1+\text{SlaveExports}_i\bigr)$ with country-level log distance to the nearest Atlantic slave port, using the distance measures from \citet{nunn2008}. Formally,
+\begin{equation}
+\log\!\left(\text{Lights}_{i,\text{2000--2013}}\right)
+=
+\beta_{\text{IV}} \widehat{\log\!\left(1+\text{SlaveExports}_i\right)}
++
+\mu_{c(i)} + \varepsilon_i,
+\label{eq:homeland-iv-levels}
+\end{equation}
+where the fitted values $\widehat{\log\!\left(1+\text{SlaveExports}_i\right)}$ come from a first stage that regresses the $\log\!\left(1+\text{SlaveExports}_i\right)$ on log distance to the nearest Atlantic slave port and a set of controls. Because the instrument varies only at the country level, the preferred IV specification does not include country fixed effects in the second stage; instead, it exploits the strong first-stage relationship between distance and homeland exports documented in \autoref{tab:homeland_iv}. The IV estimates remain small and statistically insignificant, and they are not statistically different from the corresponding OLS coefficients, reinforcing the conclusion that historical slave exports are not a major determinant of average luminosity levels once geography is taken into account.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Country-level luminosity and historical slave exports}
+
+I begin by replicating Nunn's \citeyearpar{nunn2008} country-level specification using average night-time lights per square kilometer over 2000--2013 as the outcome. Regressing log lights per area on log slave exports per land area and the full set of Nunn's geographic, colonial, legal-origin, and regional controls yields a small, negative, and statistically insignificant coefficient on slave exports: the OLS estimate is $\Result{TCountryIV.ols.terms.ln_export_area.estimate}{.3f}$ (s.e.\ $\Result{TCountryIV.ols.terms.ln_export_area.se}{.3f}$). When I instrument log exports per area with log distance to the nearest Atlantic slave port, the IV coefficient remains imprecise ($\Result{TCountryIV.iv.terms.ln_export_area.estimate}{.3f}$, s.e.\ $\Result{TCountryIV.iv.terms.ln_export_area.se}{.3f}$) and the first-stage $F$-statistic is only $\Result{TCountryIV.iv.first_stage_f}{.2f}$, indicating a weak instrument in this Africa-only sample. Overall, at the country level there is no robust evidence that higher historical slave exports are associated with lower modern luminosity levels once I condition on Nunn's original controls.
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=\textwidth]{output/figures/figure_4.png}
+    \caption{Average luminosity over time by slave-export tercile. The figure plots the mean log night-time lights for ethnic homelands grouped into terciles of historical slave exports, using annual DMSP composites from 1992 to 2013. All terciles exhibit a similar upward trend in luminosity, and the three lines move largely in parallel both before and after the vertical line marking a change in the DMSP sensor and calibration around 2010. The absence of systematic divergence across terciles suggests that, conditional on the common sensor break, heavily exported homelands have not grown markedly faster or slower in night lights than low-export homelands over the sample period.}
+    \label{fig:ts_lights_by_tercile}
+\end{figure}
+
+Slave-export terciles divide ethnic homelands into three equally sized groups based on their historical exposure to the slave trades, measured by the log of slave exports plus one. I first sort homelands by this measure and then assign them to tercile 1 (lowest third of historical exports), tercile 2 (middle third), or tercile 3 (highest third). 
+
+Figure \ref{fig:ts_lights_by_tercile} plots the average log night-time lights for each tercile over 1992–2013 and shows that, although high-export homelands tend to be somewhat more luminous in levels in most years, the three terciles follow very similar trajectories before and after the DMSP sensor break. In particular, there is no evidence of sustained divergence in growth rates across terciles: low-, middle-, and high-export homelands all experience comparable increases in luminosity over time, suggesting that the raw evolution of lights by itself does not reveal large differences in recent economic growth associated with historical slave-export intensity. Taken together, the figure suggests that heavily exported homelands have not grown systematically faster or slower in recent decades than low-export homelands in raw lights data, reinforcing the need for the fixed-effects and regression analysis that follows to uncover more subtle relationships.
+
+\subsection{Ethnic-homeland levels in lights}
+
+\begin{table}[htbp]
+\centering
+\caption{Ethnic-homeland night lights per capita, slave exports, and distance to coast}
+\label{tab:homeland_lightspc_levels}
+\begin{tabular}{lcc}
+\toprule
+                    & (1) & (2) \\
+                    & Lights per capita ($\times 10^6$) & Lights per capita ($\times 10^6$) \\
+\midrule
+$\log(1+\text{exports}_i)$ 
+  & $\Result{TPerCapita.1.terms.logexports.estimate}{.3f-rstars}$ & $\Result{TPerCapita.2.terms.logexports.estimate}{.3f-rstars}$ \\
+  & $\Result{TPerCapita.1.terms.logexports.se}{.3f-se}$ & $\Result{TPerCapita.2.terms.logexports.se}{.3f-se}$ \\
+$\log(1+\text{dist. to coast}_i)$ 
+  &                 & $\Result{TPerCapita.2.terms.logdistcoast.estimate}{.3f-rstars}$ \\
+  &                 & $\Result{TPerCapita.2.terms.logdistcoast.se}{.3f-se}$ \\
+\addlinespace
+Country fixed effects & No & No \\
+\midrule
+Observations          & \Result{TPerCapita.1.n}{.0f} & \Result{TPerCapita.2.n}{.0f} \\
+$R^2$                 & \Result{TPerCapita.1.r2}{.3f} & \Result{TPerCapita.2.r2}{.3f} \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize Notes: Dependent variable is average night-time lights per capita between 2000 and 2013 for each ethnic homeland, scaled by $10^6$. The main regressor is log of one plus total slave exports at the homeland level. Column (2) adds log distance to the African coastline. All specifications are estimated without country fixed effects. Robust standard errors in parentheses. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.}
+\end{table}
+
+Table~\ref{tab:homeland_lightspc_levels} reports the baseline cross-sectional regressions of ethnic-homeland night lights per capita on historical slave exports and distance to the coast. In column (1), which omits geography, the coefficient on $\log(1+\text{exports}_i)$ is small and statistically indistinguishable from zero. Column (2) adds $\log(1+\text{dist. to coast}_i)$; the export coefficient becomes more negative and statistically significant at conventional levels, but its magnitude is modest and the regression explains only 2.5 percent of the variation in lights per capita, whereas distance to the coast is large, negative, and precisely estimated.
+
+To construct the lights-per-capita outcome, I aggregate gridded population data to each homeland polygon for every year, compute average lights per person, and then average over 2000--2013; missing population grids restrict the sample to \Result{TPerMillion.1.n}{.0f} homelands.\citep{bruederlehodler2018} Table~\ref{tab:homeland_lights_pc} adds a third specification that uses log lights per square kilometer as the dependent variable. Across all three columns, the pattern is similar: distance to the coast is a strong predictor of both lights per capita and lights per area, while the export coefficient is negative but economically small and the $R^2$ values remain low. Taken together with the country-level results, these levels regressions suggest that geography---especially coastal proximity---is a much stronger correlate of modern luminosity than historical slave-export intensity.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{output/figures/figure_5.png}
+    \caption{Historical slave exports and modern luminosity}
+    \label{fig:exports-lights-scatter}
+\end{figure}
+
+As shown in Figure \ref{fig:exports-lights-scatter}, ethnic homelands with higher historical slave exports do not display a clear negative raw relationship with modern night-time lights. The bivariate pattern is weak and noisy, which is why the empirical analysis relies on fixed effects and controls rather than the scatter alone.
+
+\begin{table}[htbp]
+\centering
+\caption{Homeland lights per million people, slave exports, and distance to coast}
+\label{tab:homeland_lights_pc}
+\begin{tabular}{lccc}
+\toprule
+                    & (1) & (2) & (3) \\
+                    & Lights per $10^6$ people & Lights per $10^6$ people & Log lights per km$^2$ \\
+\midrule
+$\log(1+\text{exports}_i)$ 
+  & $\Result{TPerMillion.1.terms.logexports.estimate}{.3f-rstars}$ & $\Result{TPerMillion.2.terms.logexports.estimate}{.3f-rstars}$ & $\Result{TPerMillion.3.terms.logexports.estimate}{sci-rstars}$ \\
+  & $\Result{TPerMillion.1.terms.logexports.se}{.3f-se}$ & $\Result{TPerMillion.2.terms.logexports.se}{.3f-se}$ & $\Result{TPerMillion.3.terms.logexports.se}{sci-se}$ \\
+$\log(1+\text{dist. to coast}_i)$ 
+  &                 & $\Result{TPerMillion.2.terms.logdistcoast.estimate}{.2f-rstars}$ & $\Result{TPerMillion.3.terms.logdistcoast.estimate}{sci-rstars}$ \\
+  &                 & $\Result{TPerMillion.2.terms.logdistcoast.se}{double2-se}$ & $\Result{TPerMillion.3.terms.logdistcoast.se}{sci-se}$ \\
+\addlinespace
+Country fixed effects & No  & No  & No \\
+\midrule
+Observations          & \Result{TPerMillion.1.n}{.0f} & \Result{TPerMillion.2.n}{.0f} & \Result{TPerMillion.3.n}{.0f} \\
+$R^2$                 & \Result{TPerMillion.1.r2}{.3f} & \Result{TPerMillion.2.r2}{.3f} & \Result{TPerMillion.3.r2}{.3f} \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize Notes: Dependent variable is average night-time lights per one million people over 2000--2013 in columns (1) and (2), and log lights per square kilometer in column (3). All regressions are estimated at the ethnic-homeland level using the subset of homelands for which gridded population data are available (\Result{TPerMillion.1.n}{.0f} observations). No specification includes country fixed effects. Standard errors in parentheses. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.}
+\end{table}
+
+\subsection{Heterogeneity by coastal proximity}
+I next examine whether the export--luminosity relationship differs between coastal and interior homelands. Table~\ref{tab:growth_heterogeneity_coast} and Figure~\ref{fig:box_lights_coastal} estimates growth regressions with country fixed effects and an interaction between $\log(1+\text{exports}_i)$ and an indicator for coastal homelands. The interaction term is positive and statistically significant, indicating that, conditional on country fixed effects, coastal homelands with higher historical exports experienced somewhat faster growth in lights than interior homelands. However, the implied differences in growth are small relative to the average coastal--interior gap and the negative effect of distance to the coast, so I treat these estimates as suggestive rather than central to the paper's main conclusions.
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.75\linewidth]{output/figures/figure_6.png}
+    \caption{Average luminosity by coastal status of ethnic homelands}
+    \label{fig:box_lights_coastal}
+    \begin{minipage}{\textwidth}
+    \footnotesize\emph{Notes:} The figure compares the distribution of log average night-time lights over 2000--2013 for ethnic homelands whose centroids lie within \(100\) km of the African coastline (labelled ``Coastal'') and those further inland (``Interior''). Coastal homelands are substantially more luminous on average: their median log lights is much higher, and the entire distribution is shifted to the right, with a thicker upper tail of very bright coastal regions. Interior homelands are both dimmer on average and exhibit a large mass near zero luminosity. This stark coastal gradient in modern economic activity reinforces the importance of geographic controls in the empirical analysis. In particular, it justifies including distance to the coast and coastal dummy interactions in the main regressions when estimating the persistent effect of historical slave exports---otherwise, the strong association between coastal access and luminosity could confound or mask the slave-trade relationships I seek to identify.
+    \end{minipage}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Growth in night lights and slave exports: coastal vs interior homelands}
+\label{tab:growth_heterogeneity_coast}
+\begin{tabular}{l c}
+\toprule
+ & $\Delta \log(\text{lights}_i)$ \\
+\midrule
+$\log(1+\text{exports}_i)$ (interior) & $\Result{TGrowth.terms.log_exports.estimate}{.3f-stars}$ \\
+ & $\Result{TGrowth.terms.log_exports.se}{.3f-se}$ \\
+Coastal homeland ($\leq 100$ km) & $\Result{TGrowth.terms.coastal.estimate}{.3f-stars}$ \\
+ & $\Result{TGrowth.terms.coastal.se}{.3f-se}$ \\
+$\log(1+\text{exports}_i)\times \text{Coastal}_i$ & $\Result{TGrowth.terms.log_exports:coastal.estimate}{.3f-stars}$ \\
+ & $\Result{TGrowth.terms.log_exports:coastal.se}{.3f-se}$ \\
+$\log(1+\text{dist. to coast}_i)$ & $\Result{TGrowth.terms.log_distance.estimate}{.3f-stars}$ \\
+ & $\Result{TGrowth.terms.log_distance.se}{.3f-se}$ \\
+\addlinespace
+Country fixed effects & Yes \\
+\midrule
+Observations & \Result{TGrowth.n}{,.0f} \\
+$R^2$        & \Result{TGrowth.r2}{.3f} \\
+Adjusted $R^2$ & \Result{TGrowth.adjusted_r2}{.3f} \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize Notes: Dependent variable is the change in log night-time lights between the earliest and latest DMSP year available for each ethnic homeland. Coastal homelands are those whose centroid lies within 100 km of the African coastline. All regressions include country fixed effects. Robust standard errors in parentheses. $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$.}
+\end{table}
+
+\subsection{IV estimates at the ethnic-homeland level}
+
+Finally, \autoref{tab:homeland_iv} reports the homeland instrumental-variables estimates. Column (1) presents an OLS regression of log average lights on log exports; the coefficient on log exports is $\Result{THomelandIV.ols.terms.log_exports.estimate}{.3f}$ (s.e.\ $\Result{THomelandIV.ols.terms.log_exports.se}{.3f}$), indistinguishable from zero. Column (2) instruments log exports with country-level log distance to the nearest Atlantic slave port. The first-stage $F$-statistic exceeds 70, indicating that distance strongly predicts homeland exports, but the second-stage coefficient on log exports remains small and statistically insignificant at $\Result{THomelandIV.iv.terms.log_exports.estimate}{.3f}$ (s.e.\ $\Result{THomelandIV.iv.terms.log_exports.se}{.3f}$). Column (3) adds log land area as a control with little change in the results, and Wu--Hausman tests do not reject equality of the OLS and IV estimates. These IV estimates reinforce the view that, once geography is taken into account, historical slave-export intensity is not a strong causal determinant of modern luminosity across homelands.
+
+\begin{table}[htbp]
+\centering
+\caption{Homeland average night lights and historical slave exports}
+\label{tab:homeland_iv}
+\begin{tabular}{lccc}
+\hline\hline
+ & (1) & (2) & (3) \\
+ & OLS & IV & IV + log land \\
+\hline
+log exports & \Result{THomelandIV.ols.terms.log_exports.estimate}{.3f} & \Result{THomelandIV.iv.terms.log_exports.estimate}{.3f} & \Result{THomelandIV.iv_land.terms.log_exports.estimate}{.3f} \\
+ & \Result{THomelandIV.ols.terms.log_exports.se}{.3f-se} & \Result{THomelandIV.iv.terms.log_exports.se}{.3f-se} & \Result{THomelandIV.iv_land.terms.log_exports.se}{.3f-se} \\[0.25em]
+log land area &  &  & \Result{THomelandIV.iv_land.terms.log_land.estimate}{.3f} \\
+ &  &  & \Result{THomelandIV.iv_land.terms.log_land.se}{.3f-se} \\[0.5em]
+Constant & \Result{THomelandIV.ols.terms.Intercept.estimate}{.3f} & \Result{THomelandIV.iv.terms.const.estimate}{.3f} & \Result{THomelandIV.iv_land.terms.const.estimate}{.3f} \\
+ & \Result{THomelandIV.ols.terms.Intercept.se}{.3f-se} & \Result{THomelandIV.iv.terms.const.se}{.3f-se} & \Result{THomelandIV.iv_land.terms.const.se}{.3f-se} \\
+\hline
+First-stage F (distance) & --- & \Result{THomelandIV.iv.first_stage_f}{.1f} & \Result{THomelandIV.iv_land.first_stage_f}{.1f} \\
+Wu--Hausman p-value & --- & \Result{THomelandIV.iv.wu_hausman_p}{.2f} & \Result{THomelandIV.iv_land.wu_hausman_p}{.2f} \\
+Observations & \Result{THomelandIV.ols.n}{,.0f} & \Result{THomelandIV.iv.n}{,.0f} & \Result{THomelandIV.iv_land.n}{,.0f} \\
+\hline\hline
+\end{tabular}
+\caption*{\footnotesize Dependent variable is the log of one plus average DMSP night-time lights between 2000 and 2013 for each ethnic homeland. The main regressor is log of one plus total slave exports at the homeland level. All specifications use country-level log distance to the nearest Atlantic slave port as an instrument for homeland exports in the second stage. Column (1) reports ordinary least squares. Columns (2) and (3) report two-stage least squares, with log land area added as a control in column (3). Robust standard errors are in parentheses. First-stage F-statistics and Wu--Hausman p-values are from the corresponding IV diagnostics.}
+\end{table}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper revisits the legacy of Africa's slave trades using satellite night lights and ethnic homelands. The central empirical finding is a levels result: in cross-sectional regressions of homeland night lights per capita on historical slave exports and distance to the coast, slave-export intensity is not a robust predictor of modern luminosity, whereas coastal proximity is consistently one of the strongest correlates of lights per capita and lights per square kilometer. This pattern is consistent with geography, rather than slave-export intensity, playing the dominant role in shaping the cross-sectional distribution of contemporary economic activity.
+
+The country-level replication of Nunn's specification also fails to recover a strong negative relationship when luminosity replaces GDP per capita, and the homeland IV estimates are similarly small. Taken together, these results qualify the view that slave exports have a large and direct persistent effect on modern development, at least as captured by satellite-based luminosity in this sample. The paper's contribution is therefore to show that the slave-trade legacy is much weaker in levels of lights than in GDP per capita, and that coastal access is the more robust predictor across specifications.
+
+\newpage
+\appendix
+\section{Appendix}
+\begin{table}[htbp]
+\centering
+\caption{Country-level night lights and historical slave exports}
+\label{tab:country_lights_exports}
+\begin{tabular}{lcc}
+\toprule
+& (1) OLS & (2) IV \\
+\midrule
+$\ln(\text{exports per area})$ & $\Result{TCountryIV.ols.terms.ln_export_area.estimate}{.3f}$ & $\Result{TCountryIV.iv.terms.ln_export_area.estimate}{.3f}$ \\
+& $\Result{TCountryIV.ols.terms.ln_export_area.se}{.3f-se}$ & $\Result{TCountryIV.iv.terms.ln_export_area.se}{.3f-se}$ \\
+\addlinespace
+Colony dummies & Yes & Yes \\
+Geographic controls & Yes & Yes \\
+Island dummy & Yes & Yes \\
+Islam share & Yes & Yes \\
+Legal origin & Yes & Yes \\
+Region dummies & Yes & Yes \\
+\midrule
+Observations & \Result{TCountryIV.ols.n}{.0f} & \Result{TCountryIV.iv.n}{.0f} \\
+$R^2$ & \Result{TCountryIV.ols.r2}{.3f} & \Result{TCountryIV.iv.r2}{.3f} \\
+Adjusted $R^2$ & \Result{TCountryIV.ols.adjusted_r2}{.3f} & \Result{TCountryIV.iv.adjusted_r2}{.3f} \\
+Residual s.e. & \Result{TCountryIV.ols.residual_se}{.3f} & \Result{TCountryIV.iv.residual_se}{.3f} \\
+First-stage F & --- & \Result{TCountryIV.iv.first_stage_f}{.2f} \\
+\bottomrule
+\end{tabular}
+\caption*{\footnotesize Notes: Dependent variable is the log of average night-time lights per square kilometer over 2000--2013 at the country level. The main regressor is Nunn's log slave exports per land area. Both columns include the full set of colonial dummies, geographic controls, an island dummy, the Muslim share, legal origin dummies, and regional dummies. Column 2 instruments log exports using log distance to the nearest Atlantic slave-trade port. The weak-instruments test indicates that the instrument is weak in this Africa-only sample.}
+\end{table}
+
+\begin{figure}[]
+    \centering
+    \includegraphics[width=0.5\linewidth]{output/figures/figure_7.png}
+    \caption{Distribution of historical slave exports across ethnic homelands}
+    \label{fig:hist_logexports}
+    \begin{minipage}{\textwidth}
+    \footnotesize\emph{Notes:} The figure plots the distribution of \(\log(\text{slave exports}+1)\) across ethnic homelands in the Nunn slave-trade data. The large spike at zero reflects the fact that a majority of homelands have no recorded slave exports, while a relatively small number of groups exhibit extremely high export levels, producing a long right tail. This skew motivates the use of the \(\log(\text{exports}+1)\) transformation throughout the analysis and helps explain why many specifications distinguish between extensive-margin exposure (any exports versus none) and intensive-margin variation among exported groups. The histogram also underscores that identification in my regressions comes disproportionately from a subset of historically heavily raided homelands, so results should be interpreted as describing the contrast between these groups and the many homelands with little or no measured exposure to the slave trades.
+    \end{minipage}
+\end{figure}
+
+\newpage
+\singlespacing
+\bibliography{source/manuscript/references_honors}
+
+\end{document}

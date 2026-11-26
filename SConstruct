@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 import sys
@@ -48,7 +49,13 @@ paper = env.Command(
     ["source/report/render_paper_tables.py", paper_table, remaining, "source/report/render_remaining_tables.py", "uv.lock"],
     '"$PYTHON" "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "$TARGET"',
 )
+figure_sources = json.loads(Path("source/thesis_figures.json").read_text())
+figures = [
+    env.Command(f"output/figures/{name}.png", path, Copy("$TARGET", "$SOURCE"))
+    for name, path in figure_sources.items()
+]
 Default(paper, scalars)
+Alias("published-figures", figures)
 
 redrawn = env.Command(
     ["output/figures/redrawn/figure_5.png", "output/figures/redrawn/figure_7.png"],
@@ -57,6 +64,16 @@ redrawn = env.Command(
     RSCRIPT=rscript,
 )
 Alias("redraw-figures", redrawn)
+
+manuscript = env.Command(
+    "output/africa_nightlights_manuscript.pdf",
+    [
+        "source/manuscript/build.py", "source/manuscript/main.tex",
+        scalars[0], "source/manuscript/references_honors.bib", figures,
+    ],
+    '"$PYTHON" "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "$TARGET"',
+)
+Alias("manuscript", manuscript)
 
 panel_archive = File("data/homelands_csv.zip")
 panels = env.Command(

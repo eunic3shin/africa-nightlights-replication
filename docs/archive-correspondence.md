@@ -2,7 +2,7 @@
 
 This public code-only snapshot preserves the archived analysis and processing code without importing private Git history or unverified data. The inventory below records the archived Git blob hashes and correspondence at the time of comparison. Git blob hashes are not ordinary file SHA-1 checksums. For the LFS panel archive, the hash identifies the pointer, not the underlying data.
 
-Public adaptations retain the manuscript DOI and data access instructions while omitting manuscript-only build targets. Excluded assets are not represented as publicly downloadable. See [data availability](../DATA_AVAILABILITY.md) and [replication notes](replication-notes.md). A complete fresh-checkout build has not been verified without the archived inputs.
+Public adaptations retain the manuscript DOI and data access instructions. Manuscript build targets and source have been restored; figures and datasets remain separate. Excluded assets are not represented as publicly downloadable. See [data availability](../DATA_AVAILABILITY.md) and [replication notes](replication-notes.md). A complete fresh-checkout build has not been verified without the archived inputs.
 
 | Archived path | Git blob SHA | Public status |
 | --- | --- | --- |
@@ -10,7 +10,7 @@ Public adaptations retain the manuscript DOI and data access instructions while 
 | `.gitignore` | `40202ff7fdac83945898f6932c530c6d7d2b59cd` | Public adaptation |
 | `CITATION.cff` | `4eb3bcde28ca745ab55c1b21cd3644768d5cad89` | Public adaptation |
 | `README.md` | `9ab276f86774f6dbd88a10c8eb06a570bdaea899` | Public adaptation |
-| `SConstruct` | `c6223df69d781a365cb1687993825114b83b02e9` | Public adaptation |
+| `SConstruct` | `c6223df69d781a365cb1687993825114b83b02e9` | Public adaptation (optional figures) |
 | `data/ctrylights.csv` | `79e8439b434fcaba7564684bcb5308a745a0917c` | Excluded asset |
 | `data/distance_coast_by_tribe.csv` | `137949673184672e3efd4d9ae25b1970add1d282` | Excluded asset |
 | `data/exports_by_tribe.csv` | `3d2ffbeed03e16d0873392bb7a4433724ccfe753` | Excluded asset |
@@ -40,11 +40,11 @@ Public adaptations retain the manuscript DOI and data access instructions while 
 | `source/data/extract_panels.py` | `1f569ca4a9fdafedaca939faf8c08854e620c27d` | Identical |
 | `source/figures/export_scatter_and_histogram.R` | `3c5e75c8466a8d853564fdd8b5e08668ca644598` | Identical |
 | `source/figures/luminosity_by_export_tercile.R` | `41f4bfc69842f6723766bb493c74ec6b7fded89a` | Identical |
-| `source/manuscript/build.py` | `54b0db4afd8244c3307bb6ffac16dee9b6f3e3d4` | Excluded manuscript component |
-| `source/manuscript/main.tex` | `c6263fa95eccc5e4d71e52ddf4f5449b13a251a0` | Excluded manuscript component |
-| `source/manuscript/references_honors.bib` | `4f523e781fb3e5a5b4a05336761cc387625fded5` | Excluded manuscript component |
+| `source/manuscript/build.py` | `54b0db4afd8244c3307bb6ffac16dee9b6f3e3d4` | Restored manuscript component |
+| `source/manuscript/main.tex` | `c6263fa95eccc5e4d71e52ddf4f5449b13a251a0` | Restored manuscript component |
+| `source/manuscript/references_honors.bib` | `4f523e781fb3e5a5b4a05336761cc387625fded5` | Restored manuscript component |
 | `source/report/render_diagnostic.py` | `336c58a5a88dfa3b00eb47b3c8f8e832833fb85a` | Identical |
 | `source/report/render_paper_tables.py` | `2693c5d1fe34b9ed17f536d1d8621b8e7192dac1` | Identical |
 | `source/report/render_remaining_tables.py` | `f84fc5cad26cc61b4dbe0d06ef8b60f75b5ebc32` | Identical |
-| `source/thesis_figures.json` | `d1914e37915c2f1c92ee19d42f4344258f6bb440` | Excluded manuscript component |
+| `source/thesis_figures.json` | `d1914e37915c2f1c92ee19d42f4344258f6bb440` | Restored manuscript component |
 | `uv.lock` | `b56e71ad8657363446f99ce8a78346fb45fa1902` | Identical |
