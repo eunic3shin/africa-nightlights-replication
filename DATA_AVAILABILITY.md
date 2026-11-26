@@ -80,3 +80,13 @@ uv run --locked scons manuscript FIGURES=redrawn
 ```
 
 The last command compiles with regenerated figures rather than archived PNGs. It is a reconstructed manuscript, not a bitwise copy of the publication. The spatial redraw simplifies the original layout and uses the mean homeland-year lights/land-area ratio for Figure 3; that denominator is land area, not population. No exact numerical or visual equivalence has yet been demonstrated.
+
+## Numerical validation against an authorized reference archive
+
+After preparation, if you have access to the original archived intermediate CSVs, run:
+
+```sh
+uv run --locked python source/verify_inputs.py data /path/to/archive/data exports_by_tribe.csv distance_coast_by_tribe.csv levels_df.csv growthdf.csv ctrylights.csv homeland_lights_pc_regdata.csv
+```
+
+The checker compares schemas, row counts, duplicate-preserving sorted rows and numeric values within a stated tolerance. It fails on discrepancies or missing files. Sorting by all columns may make near-tied numeric rows compare out of order; inspect such failures individually. No archived input data are included or requested by this checker. This comparison is not a substitute for validating the final regression estimates or figure outputs.
