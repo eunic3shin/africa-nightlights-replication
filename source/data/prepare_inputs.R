@@ -1,7 +1,7 @@
 # Recovered preprocessing from historical research notebooks.
 # Requires R packages readr, dplyr, sf, haven, rnaturalearth, rnaturalearthdata.
 # Usage: Rscript source/data/prepare_inputs.R data/raw data
-# Earth Engine exports must already exist; original export settings were not archived.
+# Earth Engine exports must already exist; original export scripts are included.
 library(readr)
 library(dplyr)
 library(sf)

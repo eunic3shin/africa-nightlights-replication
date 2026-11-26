@@ -63,7 +63,7 @@ uv run --locked scons
 uv run --locked scons redraw-panel-figures MASTER_PANEL=data/homelands_dmsp_panel_master.csv
 ```
 
-The [preprocessing script](source/data/prepare_inputs.R) ports the historical geometry, exports, coast, master panel, levels, growth, country totals and per-capita cross-section routines. The original Earth Engine export code has now been recovered directly from the author; see the three scripts below. The reconstructed files have not yet been numerically validated against the archived inputs.
+The [preprocessing script](source/data/prepare_inputs.R) ports the historical geometry, exports, coast, master panel, levels, growth, country totals and per-capita cross-section routines. The original Earth Engine export code has now been recovered directly from the author; see the three scripts below. Independent checks of the author-supplied source geometry, export attributes, raw panel and archived master panel are documented in replication notes. The R-generated intermediates still require local validation.
 
 ## Complete reconstructed workflow
 
