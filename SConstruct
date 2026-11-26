@@ -50,6 +50,8 @@ paper = env.Command(
     '"$PYTHON" "${SOURCES[0]}" "${SOURCES[1]}" "${SOURCES[2]}" "$TARGET"',
 )
 figure_sources = json.loads(Path("source/thesis_figures.json").read_text())
+if ARGUMENTS.get("FIGURES") == "redrawn":
+    figure_sources = {name: f"output/figures/redrawn/{name}.png" for name in figure_sources}
 figures = [
     env.Command(f"output/figures/{name}.png", path, Copy("$TARGET", "$SOURCE"))
     for name, path in figure_sources.items()
@@ -86,7 +88,7 @@ Alias("extract-panels", panels)
 if Path(panel_archive.path).is_file():
     Default(panels)
 
-master_panel = ARGUMENTS.get("MASTER_PANEL", panels[1])
+master_panel = ARGUMENTS.get("MASTER_PANEL", "data/homelands_dmsp_panel_master.csv" if Path("data/homelands_dmsp_panel_master.csv").is_file() else panels[1])
 panel_figures = env.Command(
     ["output/figures/redrawn/figure_4.png", "output/figures/redrawn/figure_4_data.csv"],
     ["source/figures/luminosity_by_export_tercile.R", master_panel],

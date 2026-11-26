@@ -9,3 +9,5 @@
 The public build covers table generation, diagnostics, and redraws for Figures 4, 5, and 7. Upstream raster processing, spatial joins, and the remaining figure redraws are outside this build.
 
 For the STEP13 diagnostic, run `uv run --locked scons output/africa_nightlights_diagnostic.pdf`. To redraw Figure 4 using a different master panel, add `MASTER_PANEL=path/to/homelands_dmsp_panel_master.csv` to the redraw command. Redrawn figures are written to `output/figures/redrawn/`. The redraw scripts use Quartz on macOS and Cairo elsewhere.
+
+The public repository now includes recovered preprocessing and figure redraw routines. See [data acquisition](../DATA_AVAILABILITY.md) for exact prerequisites, reconstruction assumptions, and remaining validation gaps. The archived analysis scripts are preserved; reconstructed figures must not be assumed identical to publication PNGs.

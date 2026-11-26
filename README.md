@@ -23,3 +23,7 @@ uv run --locked scons manuscript
 ```
 
 The manuscript target uses archived publication figures rather than claiming to regenerate every figure. The manuscript DOI identifies the paper, not this code version. See [data availability](DATA_AVAILABILITY.md) for access limitations.
+
+## Starting from raw provider downloads
+
+See the [complete acquisition and preparation workflow](DATA_AVAILABILITY.md). The reconstructed pipeline is not yet verified against the archived numerical outputs. To compile with newly drawn figures rather than separately obtained publication PNGs, use `uv run --locked scons manuscript FIGURES=redrawn` after completing preparation and figure redraws.

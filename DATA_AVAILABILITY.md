@@ -63,4 +63,20 @@ uv run --locked scons
 uv run --locked scons redraw-panel-figures MASTER_PANEL=data/homelands_dmsp_panel_master.csv
 ```
 
-The [preprocessing script](source/data/prepare_inputs.R) ports the historical geometry, exports, coast, master panel, levels, growth, country totals and per-capita cross-section routines. Original Earth Engine raster-to-CSV exports were not recovered; this is an explicit remaining dependency. The reconstructed files have not yet been numerically validated against the archived inputs.
+The [preprocessing script](source/data/prepare_inputs.R) ports the historical geometry, exports, coast, master panel, levels, growth, country totals and per-capita cross-section routines. The original Earth Engine raster-to-CSV code was not recovered; the repository now includes a clearly labeled reconstruction (see below). The reconstructed files have not yet been numerically validated against the archived inputs.
+
+## Complete reconstructed workflow
+
+1. Download the sources above and put the Murdock shapefile sidecars and ethnic export Stata file in data/raw/.
+2. Install the R packages listed above plus ggplot2 and patchwork. Run `uv run --locked scons prepare-geometry`.
+3. Convert data/homelands_exports.gpkg to a shapefile or GeoJSON (e.g. using QGIS, preserving the TRIBE_CODE, NAME, total_exports and land_area attributes) and upload to a table asset in your own [Earth Engine project](https://code.earthengine.google.com/). Copy [earth_engine_exports.js](source/data/earth_engine_exports.js) into the Code Editor, replace the placeholder asset ID, run it, and start both CSV exports in Tasks. Download the CSVs from Drive to data/raw/. If shapefile conversion truncates attribute names, use GeoJSON or adapt the script's explicit property mapping. This is a candidate reconstruction using stable_lights, annual means and native nominal scales; exact historical export settings remain unknown.
+4. Put slave_trade_QJE.dta in data/raw/ and run:
+
+```sh
+uv run --locked scons prepare-data
+uv run --locked scons
+uv run --locked scons redraw-spatial-figures redraw-figures redraw-panel-figures
+uv run --locked scons manuscript FIGURES=redrawn
+```
+
+The last command compiles with regenerated figures rather than archived PNGs. It is a reconstructed manuscript, not a bitwise copy of the publication. The spatial redraw simplifies the original layout and uses the mean homeland-year lights/land-area ratio for Figure 3; that denominator is land area, not population. No exact numerical or visual equivalence has yet been demonstrated.
