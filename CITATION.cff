@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use these research materials, please cite the associated manuscript and identify the archive version used."
+title: "Slave Trade's Shadow: Historical Slave Exports and Nighttime Lights: Research replication archive"
+type: software
+authors:
+  - family-names: Shin
+    given-names: Eunice
+    orcid: "https://orcid.org/0009-0002-9756-1578"
+repository-code: "https://github.com/eunic3shin/africa-nightlights-replication"
+preferred-citation:
+  type: thesis
+  title: "Slave Trade's Shadow: Historical Slave Exports and Nighttime Lights"
+  authors:
+    - family-names: Shin
+      given-names: Eunice
+      orcid: "https://orcid.org/0009-0002-9756-1578"
+  doi: "10.5281/zenodo.24553066"
+  url: "https://doi.org/10.5281/zenodo.24553066"

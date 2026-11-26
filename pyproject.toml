@@ -1,0 +1,10 @@
+[project]
+name = "africa-nightlights-replication"
+version = "0.1.0"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "pandas>=2.2,<3",
+    "reportlab>=4,<5",
+    "scons>=4.8,<5",
+    "statsmodels>=0.14,<0.15",
+]
