@@ -94,3 +94,23 @@ panel_figures = env.Command(
     RSCRIPT=rscript,
 )
 Alias("redraw-panel-figures", panel_figures)
+
+
+# Explicit upstream preparation; keep existing archived-input build unchanged.
+if "prepare-data" in COMMAND_LINE_TARGETS:
+    prep = env.Command(
+    ["data/exports_by_tribe.csv", "data/distance_coast_by_tribe.csv",
+     "data/homelands_dmsp_panel_master.csv", "data/levels_df.csv",
+     "data/growthdf.csv", "data/ctrylights.csv",
+     "data/homeland_lights_pc_regdata.csv", "data/homelands_pop_2010.csv",
+     "data/slave_trade_QJE.dta"],
+    ["source/data/prepare_inputs.R", "data/raw/Murdock_Map_2020.shp",
+     "data/raw/Murdock_Map_2020.dbf", "data/raw/Murdock_Map_2020.shx",
+     "data/raw/Murdock_Map_2020.prj",
+     "data/raw/tribe_level_slave_exports_Atlantic_Indian.dta",
+     "data/raw/homelands_dmsp_panel.csv", "data/raw/homelands_pop_2010.csv",
+     "data/raw/slave_trade_QJE.dta"],
+    '"$RSCRIPT" --vanilla "${SOURCES[0]}" data/raw data',
+    RSCRIPT=rscript,
+)
+    Alias("prepare-data", prep)
