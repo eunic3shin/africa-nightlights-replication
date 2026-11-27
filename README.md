@@ -29,3 +29,7 @@ The manuscript target uses archived publication figures rather than claiming to 
 See the [complete acquisition and preparation workflow](DATA_AVAILABILITY.md). The reconstructed pipeline is not yet verified against the archived numerical outputs. To compile with newly drawn figures rather than separately obtained publication PNGs, use `uv run --locked scons manuscript FIGURES=redrawn` after completing preparation and figure redraws.
 
 The original Earth Engine scripts supplied by the author are included under `source/data/`: [homeland lights](source/data/earth_engine_exports.js), [population](source/data/earth_engine_population.js), and [optional annual rasters](source/data/earth_engine_rasters.js). See the acquisition guide for asset setup and export steps.
+
+## Validation status (2026-11-27)
+
+Local macOS execution verified: raw preprocessing, master-panel comparison, Tables 1–7 generation, figure redraws and manuscript build. Tables 2–7 agree with historical notebook outputs at displayed precision. See replication notes for the unreconciled Table 1 per-capita row, inference-label differences and figure limitations.

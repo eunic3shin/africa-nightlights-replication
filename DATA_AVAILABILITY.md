@@ -90,3 +90,7 @@ uv run --locked python source/verify_inputs.py data /path/to/archive/data export
 ```
 
 The checker compares schemas, row counts, duplicate-preserving sorted rows and numeric values within a stated tolerance. It fails on discrepancies or missing files. Sorting by all columns may make near-tied numeric rows compare out of order; inspect such failures individually. No archived input data are included or requested by this checker. This comparison is not a substitute for validating the final regression estimates or figure outputs.
+
+## Local validation update (2026-11-27)
+
+Local macOS execution verified: raw preprocessing, master-panel comparison, Tables 1–7 generation, figure redraws and manuscript build. Tables 2–7 agree with historical notebook outputs at displayed precision. See replication notes for the unreconciled Table 1 per-capita row, inference-label differences and figure limitations. Earlier references to pending execution in this guide describe the initial reconstruction stage; exact intermediate and figure equivalence beyond the documented comparisons is not established.
